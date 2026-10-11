@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roast #1 · Airbnb 房源页：80 个没有名字的照片按钮 · A11y Roasts</title>
+<style>
+  :root { --bg: #0d1117; --card: #161b22; --text: #e6edf3; --muted: #8b949e; --accent: #fb923c; --border: #262d36; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px 24px 80px; line-height: 1.8; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  a.back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  a.back:hover { color: var(--accent); }
+  .day { font-size: 12px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin: 28px 0 8px; }
+  h1 { font-size: 32px; margin: 0 0 6px; letter-spacing: -0.5px; line-height: 1.4; }
+  .lede { color: var(--muted); font-size: 16px; margin: 0 0 24px; }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 28px; }
+  .lang-toggle button { background: transparent; border: 0; color: var(--muted); padding: 8px 20px; font-size: 14px; cursor: pointer; }
+  .lang-toggle button.active { background: var(--accent); color: #2a1503; font-weight: 600; }
+  body[data-lang="zh"] .en { display: none; }
+  body[data-lang="en"] .zh { display: none; }
+  section.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 26px; margin-bottom: 18px; }
+  section.card h2 { font-size: 19px; margin: 0 0 10px; line-height: 1.5; }
+  section.card h2 .n { color: var(--accent); margin-right: 8px; }
+  .sev { display: inline-block; font-size: 12px; border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; color: var(--muted); margin-left: 8px; vertical-align: middle; }
+  .sev.high { color: #f87171; border-color: #f87171; }
+  .sev.med { color: #fbbf24; border-color: #fbbf24; }
+  section.card h3 { font-size: 15px; color: var(--accent); margin: 18px 0 6px; }
+  section.card p, section.card li { font-size: 15px; }
+  section.card ul { margin: 8px 0 0; padding-left: 20px; }
+  section.card li { margin-bottom: 8px; }
+  section.card li::marker { color: var(--accent); }
+  code { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; font-size: 13px; }
+  .muted { color: var(--muted); }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .interview { background: rgba(251,146,60,.07); border: 1px dashed var(--accent); border-radius: 14px; padding: 20px 24px; margin-top: 24px; }
+  .interview p { margin: 6px 0; font-size: 15px; }
+  footer { margin-top: 48px; display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body data-lang="zh">
+<div class="wrap">
+  <a class="back" href="../../index.html">← <span class="zh">全部找茬</span><span class="en">All roasts</span></a>
+  <div class="day">Roast #1 · 2026-10-11</div>
+  <h1 class="zh">Airbnb 房源页：80 个没有名字的照片按钮</h1>
+  <h1 class="en">Airbnb Listing Page: 80 Photo Buttons With No Names</h1>
+  <p class="lede zh">审的是我自己的房源页（SoFi USC West LA Retreat）—— 每个问题都可亲自验证。方法：真机键盘走查 + DevTools Accessibility tree 取证。Airbnb 有大量 A/B 测试，以下为 2026-10-11 抓到的版本。</p>
+  <p class="lede en">I audited my own listing page (SoFi USC West LA Retreat) — every issue below is verifiable first-hand. Method: real-browser keyboard walkthrough + DevTools Accessibility tree forensics. Airbnb runs heavy A/B tests; this reflects the version captured on 2026-10-11.</p>
+
+  <div class="lang-toggle">
+    <button data-lang="zh" class="active" onclick="setLang('zh')">中文</button><button data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+
+  <section class="card">
+    <h2><span class="n">①</span><span class="zh">Photo Tour 里约 80 个照片按钮没有 accessible name</span><span class="en">~80 photo buttons in Photo Tour have no accessible name</span><span class="sev high">High</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>点"Show all photos"进入 Photo Tour 弹窗，照片按房间分区陈列。Accessibility tree 里这些照片按钮全是裸 <code>button</code>。查 HTML 实锤：<code>&lt;button aria-label=""&gt;</code> 包着 <code>&lt;img aria-hidden="true" alt=""&gt;</code> —— 按钮名和图片 alt 双双为空。</p>
+      <h3>用户影响</h3>
+      <p>读屏用户面对几十个无法区分的"button"，照片浏览基本不可用 —— 而照片恰恰是房源页最核心的信息载体。</p>
+      <h3>WCAG 依据</h3>
+      <p>4.1.2 Name, Role, Value（控件必须有可被读出的名字）；连带 1.1.1 Non-text Content。</p>
+      <h3>修复方案</h3>
+      <p>不需要手写 80 条文案 —— 数据源现成：同一页照片网格的第 1、2 张已有高质量描述（"Resort style backyard"），说明照片元数据里有描述字段，只是 Photo Tour 按钮没接进来。模板：<code>aria-label="{房间名} photo {n} of {m}: {照片描述}"</code>；去掉按钮上 <code>aria-label=""</code> 的空值覆盖；<code>img</code> 保持 <code>alt="" aria-hidden="true"</code>（避免读两遍）。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>Opening "Show all photos" launches the Photo Tour dialog with photos grouped by room. In the accessibility tree, every photo button is a bare <code>button</code> with no name. The HTML confirms it: <code>&lt;button aria-label=""&gt;</code> wrapping <code>&lt;img aria-hidden="true" alt=""&gt;</code> — both the button name and the image alt are empty.</p>
+      <h3>Impact</h3>
+      <p>Screen reader users face dozens of indistinguishable "buttons" — photo browsing is effectively broken, and photos are the single most important content on a listing page.</p>
+      <h3>WCAG</h3>
+      <p>4.1.2 Name, Role, Value; also 1.1.1 Non-text Content.</p>
+      <h3>Fix</h3>
+      <p>No need to hand-write 80 labels — the data already exists: photos 1–2 in the same page's grid have rich descriptions ("Resort style backyard"), so photo metadata carries descriptions; the Photo Tour buttons just aren't wired to it. Template: <code>aria-label="{Room} photo {n} of {m}: {description}"</code>; drop the empty <code>aria-label=""</code> override; keep <code>img</code> as <code>alt="" aria-hidden="true"</code> to avoid double announcement.</p>
+    </div>
+    <figure>
+      <img src="photo-tour.png" alt="Airbnb Photo Tour dialog — the photo buttons examined in this roast">
+      <figcaption class="zh">取证截图：Photo Tour 弹窗 —— 问题①的照片按钮们</figcaption>
+      <figcaption class="en">Evidence: the Photo Tour dialog — home of the nameless photo buttons in issue ①</figcaption>
+    </figure>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">②</span><span class="zh">Guests 人数选择器 Esc 关不掉</span><span class="en">Guests stepper can't be dismissed with Escape</span><span class="sev med">Medium</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>预订面板的 GUESTS 按钮，键盘 Enter 能打开人数选择器，展开/收起状态也正确暴露，但连按多次 Esc 选择器依然开着，只能一路 Tab 到"Close"按钮去关。</p>
+      <h3>用户影响</h3>
+      <p>纯键盘用户被迫多走一串 Tab 才能脱身；Esc 关弹窗是全网通用约定，违背它等于在用户肌肉记忆上埋雷。</p>
+      <h3>WCAG 依据</h3>
+      <p>2.1.1 Keyboard；行为对照 APG 的 disclosure / dialog 模式 —— Esc 关闭是预期行为。</p>
+      <h3>修复方案</h3>
+      <p>打开时监听 <code>keydown</code>，Esc → 关闭 popover；关闭后把焦点还给触发它的 GUESTS 按钮（focus management）。5 行代码级修复，建议进组件库的 popover 基类，一次修好全站同类控件。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>The GUESTS button in the booking panel opens the guest stepper via keyboard (Enter), and expanded/collapsed state is correctly exposed — but pressing Escape repeatedly leaves the stepper open. The only keyboard way out is tabbing all the way to the "Close" button.</p>
+      <h3>Impact</h3>
+      <p>Keyboard-only users are forced through a long Tab detour to escape; Escape-to-dismiss is a universal convention, and violating it plants a mine in users' muscle memory.</p>
+      <h3>WCAG</h3>
+      <p>2.1.1 Keyboard; behaviorally, the APG disclosure/dialog pattern expects Escape to dismiss.</p>
+      <h3>Fix</h3>
+      <p>Listen for <code>keydown</code> while open: Escape closes the popover and returns focus to the GUESTS trigger (focus management). A ~5-line fix — land it in the shared popover base class and every similar control site-wide is fixed at once.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">③</span><span class="zh">Guests 按钮的 accessible name 是 "1guest"</span><span class="en">Guests button's accessible name is "1guest"</span><span class="sev">Low</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>按钮的计算名是 <code>"1guest"</code> —— 中间没空格；页面可见文案是 "GUESTS" / "1 guest"，accessible name 和任一可见字符串都不一致。</p>
+      <h3>用户影响</h3>
+      <p>Voice Control 用户说"click 1 guest"时，系统按名字匹配控件，"1guest"对不上，可能点不中 —— 纯视觉用户永远感知不到的一类 bug。</p>
+      <h3>WCAG 依据</h3>
+      <p>2.5.3 Label in Name（可见标签的文字必须出现在 accessible name 里）。</p>
+      <h3>修复方案</h3>
+      <p>根因大概率是 i18n 模板 <code>{count}{unit}</code> 拼字符串漏了空格。改成 <code>"{count} {unit}"</code>（或别手写覆盖，让名字从可见文本计算）。顺带全站扫一遍同类拼接：金额、日期、人数这种"数字+单位"模板是重灾区。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>The button's computed accessible name is <code>"1guest"</code> — no space. The visible text reads "GUESTS" / "1 guest", so the accessible name matches neither visible string.</p>
+      <h3>Impact</h3>
+      <p>Voice Control users saying "click 1 guest" match controls by name — "1guest" won't match, and the tap can miss. A class of bug sighted users never perceive.</p>
+      <h3>WCAG</h3>
+      <p>2.5.3 Label in Name (visible label text must appear in the accessible name).</p>
+      <h3>Fix</h3>
+      <p>Root cause is almost certainly an i18n template concatenating <code>{count}{unit}</code> without a space. Change to <code>"{count} {unit}"</code> (or stop overriding and let the name compute from visible text). Sweep the codebase for the same pattern — "{number}{unit}" templates for prices, dates, and counts are repeat offenders.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="zh">附：这次还发现了（未进前三）</span><span class="en">Also found (honorable mentions)</span></h2>
+    <div class="zh">
+      <ul>
+        <li>"Where you'll be"区的按钮读作 "Learnaboutverification."（词粘连，4.1.2）—— 和③同根因的 i18n 拼接 bug。</li>
+        <li>"Where you'll sleep"轮播的上/下一页就叫 "Previous"/"Next"，不说在翻什么 —— 改成 "Previous bedroom photo" 即好。</li>
+        <li>照片网格第 3–5 张按钮名是"房源标题 + image 3"，冗余无信息 —— 与①同一数据源问题，且同页第 1、2 张就是正例，对比强烈。</li>
+        <li>Stepper 里的 −/+ 只叫 "subtract"/"add"，没和 "Adults" 分组关联 —— 用 <code>aria-labelledby</code> 把组标签拼进名字。</li>
+        <li>弹窗打开时页里出现多个 h1（1.3.1 建议项）。</li>
+      </ul>
+    </div>
+    <div class="en">
+      <ul>
+        <li>A button in "Where you'll be" announces as "Learnaboutverification." (words glued together, 4.1.2) — same i18n-concatenation root cause as ③.</li>
+        <li>The "Where you'll sleep" carousel controls are just "Previous"/"Next" with no hint of what they paginate — "Previous bedroom photo" would do.</li>
+        <li>Photo-grid buttons 3–5 are named "{listing title} image 3" — redundant noise from the same data problem as ①, while buttons 1–2 on the same page are the positive example.</li>
+        <li>Stepper −/+ buttons are named only "subtract"/"add", unassociated with their "Adults" group — stitch the group label in via <code>aria-labelledby</code>.</li>
+        <li>Multiple h1s appear while dialogs are open (1.3.1 advisory).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="zh">附：验证通过的</span><span class="en">Verified passing</span></h2>
+    <div class="zh">
+      <ul>
+        <li>全键盘走查：焦点环处处可见、Tab 顺序合理、Photo Tour 可 Enter 开 / Esc 关（2.4.7 通过）。</li>
+        <li>日期选择器是键盘范本：方向键逐天、PgUp/PgDn 切月、有快捷键说明；每天按钮名字信息丰富。</li>
+        <li>标题层级干净：全页唯一 h1，无跳级。对比度：次要灰字约 #717171（≈4.8:1），过 1.4.3。触摸目标最小约 32px，过 2.5.8。</li>
+      </ul>
+    </div>
+    <div class="en">
+      <ul>
+        <li>Full keyboard walkthrough: visible focus everywhere, logical tab order, Photo Tour opens with Enter and closes with Escape (2.4.7 passes).</li>
+        <li>The date picker is a keyboard exemplar: arrow-key day navigation, PgUp/PgDn for months, a shortcuts panel, rich day-button names.</li>
+        <li>Clean heading outline: exactly one h1, no skipped levels. Contrast: secondary gray ≈ #717171 (≈4.8:1), passes 1.4.3. Smallest touch targets ≈32px, pass 2.5.8.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="interview">
+    <p class="zh"><strong>🎙️ 面试怎么讲：</strong>"审过一次 Airbnb 房源页，最大的发现是它的 Photo Tour 有 80 个没名字的照片按钮 —— 读屏用户听到的是 80 个'button'。有意思的是同页前两张照片名字写得很好，说明不是没能力，是组件没把已有的照片描述数据接进来。修法不是手写 80 条文案，是改模板从元数据自动拼名字。"</p>
+    <p class="en"><strong>🎙️ How to say it in an interview:</strong> "I once audited an Airbnb listing page and found ~80 photo buttons with no accessible names — screen reader users just hear 'button' eighty times. The interesting part: the first two photos on the same page had great names, so it wasn't inability — the component simply wasn't wired to the photo metadata that already existed. The fix isn't hand-writing 80 labels; it's generating names from metadata in the template."</p>
+  </div>
+
+  <footer>
+    <span class="muted">A11y Roasts · 每天一期</span>
+    <a href="../../index.html"><span class="zh">← 全部找茬</span><span class="en">← All roasts</span></a>
+  </footer>
+</div>
+<script>
+function setLang(l){ document.body.dataset.lang = l;
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
+  document.documentElement.lang = l==='zh' ? 'zh-CN' : 'en'; }
+</script>
+</body>
+</html>

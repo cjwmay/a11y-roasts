@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roast #2 · OpenTable 餐厅页：预订组件的图标按钮没有可见文字 · A11y Roasts</title>
+<style>
+  :root { --bg: #0d1117; --card: #161b22; --text: #e6edf3; --muted: #8b949e; --accent: #fb923c; --border: #262d36; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px 24px 80px; line-height: 1.8; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  a.back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  a.back:hover { color: var(--accent); }
+  .day { font-size: 12px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin: 28px 0 8px; }
+  h1 { font-size: 32px; margin: 0 0 6px; letter-spacing: -0.5px; line-height: 1.4; }
+  .lede { color: var(--muted); font-size: 16px; margin: 0 0 24px; }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 28px; }
+  .lang-toggle button { background: transparent; border: 0; color: var(--muted); padding: 8px 20px; font-size: 14px; cursor: pointer; }
+  .lang-toggle button.active { background: var(--accent); color: #2a1503; font-weight: 600; }
+  body[data-lang="zh"] .en { display: none; }
+  body[data-lang="en"] .zh { display: none; }
+  section.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 26px; margin-bottom: 18px; }
+  section.card h2 { font-size: 19px; margin: 0 0 10px; line-height: 1.5; }
+  section.card h2 .n { color: var(--accent); margin-right: 8px; }
+  .sev { display: inline-block; font-size: 12px; border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; color: var(--muted); margin-left: 8px; vertical-align: middle; }
+  .sev.med { color: #fbbf24; border-color: #fbbf24; }
+  section.card h3 { font-size: 15px; color: var(--accent); margin: 18px 0 6px; }
+  section.card p, section.card li { font-size: 15px; }
+  section.card ul { margin: 8px 0 0; padding-left: 20px; }
+  section.card li { margin-bottom: 8px; }
+  section.card li::marker { color: var(--accent); }
+  code { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; font-size: 13px; }
+  .muted { color: var(--muted); }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .interview { background: rgba(251,146,60,.07); border: 1px dashed var(--accent); border-radius: 14px; padding: 20px 24px; margin-top: 24px; }
+  .interview p { margin: 6px 0; font-size: 15px; }
+  footer { margin-top: 48px; display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body data-lang="zh">
+<div class="wrap">
+  <a class="back" href="../../index.html">← <span class="zh">全部找茬</span><span class="en">All roasts</span></a>
+  <div class="day">Roast #2 · 2026-10-11</div>
+  <h1 class="zh">OpenTable 餐厅页：预订组件的图标按钮没有可见文字</h1>
+  <h1 class="en">OpenTable Restaurant Page: The Booking Widget's Icon Buttons Have No Visible Labels</h1>
+  <p class="lede zh">原定审 Zillow 房源页，但 Zillow 对真机浏览器返回 "Access to this page has been denied"（bot 校验）—— 按流程不绕过，改用备选 OpenTable。审的是洛杉矶热门餐厅 Bestia 的页面（4.7 星，9,212 条评价）。方法：真机键盘走查 + accessibility tree 快照 + aria-label/alt/href 属性取证。以下为 2026-10-11 抓到的版本。</p>
+  <p class="lede en">The plan was a Zillow listing page, but Zillow answered the real browser with "Access to this page has been denied" (bot protection) — per protocol, no bypass; I switched to the backup, OpenTable. The audited page is a popular LA restaurant, Bestia (4.7 stars, 9,212 reviews). Method: real-browser keyboard walkthrough + accessibility-tree snapshots + aria-label/alt/href forensics. This reflects the version captured on 2026-10-11.</p>
+
+  <div class="lang-toggle">
+    <button data-lang="zh" class="active" onclick="setLang('zh')">中文</button><button data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+
+  <section class="card">
+    <h2><span class="n">①</span><span class="zh">吸顶预订组件的图标 combobox，名字里没有可见文字</span><span class="en">Sticky booking widget's icon-only comboboxes have no visible text in their names</span><span class="sev med">Medium</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>右上角吸顶预订组件里，"2 people"（人数）和 "7:00 PM"（时间）两个选择器是图标 + combobox 组合，人形/时钟图标旁没有文字标签。取证：accessibility tree 里它们的名字是 <code>"Party size selector"</code> 和 <code>"Time selector"</code>，显示的值 "2 people" / "7:00 PM" 不在名字里。</p>
+      <h3>用户影响</h3>
+      <p>Voice Control 用户说"click 2 people"，系统按名字匹配控件 —— "Party size selector" 对不上，点不中。而这恰恰是全页最核心的转化组件。对照组：同一页 inline 预订变体渲染成单个按钮 <code>"For 2 people, Oct 11, 2026, 7:00 PM"</code>，名字含可见文字，是对的。</p>
+      <h3>WCAG 依据</h3>
+      <p>2.5.3 Label in Name（可见标签的文字必须出现在 accessible name 里）。同类：reviews 区排序 combobox 名字叫 <code>"Sort by"</code>、显示 "Newest"，但页面上根本看不到 "Sort by" 几个字。</p>
+      <h3>修复方案</h3>
+      <p>二选一或并用：① 给图标配可见文字标签（"Party size" / "Time"），让名字从可见文本计算；② 让 accessible name 包含当前值：<code>aria-label="Party size, 2 people"</code>，值变时同步更新。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>In the sticky booking widget (top-right), the "2 people" (party size) and "7:00 PM" (time) selectors pair an icon with a combobox — no text labels next to the person/clock icons. Forensics: the accessibility tree names them <code>"Party size selector"</code> and <code>"Time selector"</code>; the visible values "2 people" / "7:00 PM" appear nowhere in the names.</p>
+      <h3>Impact</h3>
+      <p>Voice Control users saying "click 2 people" match controls by name — "Party size selector" won't match, and the tap can miss. And this is the page's single most important conversion widget. The positive control: the same page's inline booking variant renders one button named <code>"For 2 people, Oct 11, 2026, 7:00 PM"</code> — name contains the visible text, correct.</p>
+      <h3>WCAG</h3>
+      <p>2.5.3 Label in Name (visible label text must appear in the accessible name). Same family: the reviews sort combobox is named <code>"Sort by"</code> showing "Newest", but no "Sort by" text is visible on screen.</p>
+      <h3>Fix</h3>
+      <p>Either or both: ① give the icons visible text labels ("Party size" / "Time") so names compute from visible text; ② include the current value in the accessible name: <code>aria-label="Party size, 2 people"</code>, updating as the value changes.</p>
+    </div>
+    <figure>
+      <img src="S1-hero.png" alt="OpenTable Bestia page — sticky booking widget with icon-only party size and time comboboxes">
+      <figcaption class="zh">取证截图：吸顶预订组件 —— 图标 + combobox，无文字标签</figcaption>
+      <figcaption class="en">Evidence: the sticky booking widget — icons + comboboxes, no text labels</figcaption>
+    </figure>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">②</span><span class="zh">三张不同的室内照片，按钮名字一字不差</span><span class="en">Three different interior photos share one identical button name</span><span class="sev">Low</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>Photos 区三张室内照片缩略图，accessibility tree 里三个按钮全叫 <code>"Enlarge image: Interior - Bestia, Los Angeles, CA"</code>（dup=1/3、2/3、3/3）—— 三张不同的照片，名字完全无法区分。</p>
+      <h3>用户影响</h3>
+      <p>读屏用户听到三个"一样的按钮"，想回看"刚才那张吧台的照片"只能靠运气。和第 1 期 Airbnb 的"80 个没名字按钮"同家族：照片有描述数据（Hero 图 alt 就是 <code>"Exterior - Bestia, Los Angeles, CA"</code>），只是缩略图模板没把区分信息接进来。</p>
+      <h3>WCAG 依据</h3>
+      <p>1.1.1 Non-text Content（信息性图片需要有意义的替代文本）。</p>
+      <h3>修复方案</h3>
+      <p>模板里加序号：<code>"Enlarge photo 2 of 23: Interior - Bestia"</code> —— 不需要新文案，序号即区分度；照片元数据若有拍摄位置（dining room / bar）可拼入。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>Three interior-photo thumbnails in the Photos section are all named <code>"Enlarge image: Interior - Bestia, Los Angeles, CA"</code> in the accessibility tree (dup=1/3, 2/3, 3/3) — three different photos, indistinguishable by name.</p>
+      <h3>Impact</h3>
+      <p>Screen reader users hear three identical "buttons" and can only guess which opens the bar photo they just saw. Same family as Roast #1's "80 nameless buttons": descriptive data exists (the hero image's alt is <code>"Exterior - Bestia, Los Angeles, CA"</code>), the thumbnail template just doesn't wire differentiation in.</p>
+      <h3>WCAG</h3>
+      <p>1.1.1 Non-text Content (informative images need meaningful text alternatives).</p>
+      <h3>Fix</h3>
+      <p>Add position to the template: <code>"Enlarge photo 2 of 23: Interior - Bestia"</code> — no new copy needed, the index is the differentiation; stitch in a location (dining room / bar) if photo metadata carries it.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">③</span><span class="zh">面包屑里两个 "Downtown" 链接，名字一样、去向不同</span><span class="en">Two "Downtown" breadcrumb links, same name, different destinations</span><span class="sev">Low</span></h2>
+    <div class="zh">
+      <h3>现象</h3>
+      <p>h1 下的面包屑 "Home &gt; United States &gt; Los Angeles &gt; Downtown &gt; Downtown" —— 两个 "Downtown" 名字完全相同，href 却指向不同页面：<code>…/region/…/downtown-south-and-east-la-restaurants</code>（大区）vs <code>…/neighborhood/…/downtown-los-angeles-restaurants</code>（街区）。</p>
+      <h3>用户影响</h3>
+      <p>读屏用户听到"Downtown、Downtown"，分不清哪个是大区、哪个是街区；连视觉用户都要靠位置猜。</p>
+      <h3>WCAG 依据</h3>
+      <p>2.4.4 Link Purpose (In Context) —— 链接目的应从名字或上下文可辨。</p>
+      <h3>修复方案</h3>
+      <p>把层级含义写进名字，如 "Downtown LA（大区）" / "Downtown（街区）"，或用 <code>aria-label</code> 区分。文案级修复，成本最低的一类。</p>
+    </div>
+    <div class="en">
+      <h3>What</h3>
+      <p>The breadcrumb under the h1 reads "Home &gt; United States &gt; Los Angeles &gt; Downtown &gt; Downtown" — two "Downtown" links with identical names but different hrefs: <code>…/region/…/downtown-south-and-east-la-restaurants</code> (district) vs <code>…/neighborhood/…/downtown-los-angeles-restaurants</code> (neighborhood).</p>
+      <h3>Impact</h3>
+      <p>Screen reader users hear "Downtown, Downtown" with no way to tell district from neighborhood; even sighted users must guess from position.</p>
+      <h3>WCAG</h3>
+      <p>2.4.4 Link Purpose (In Context) — link purpose should be determinable from the name or its context.</p>
+      <h3>Fix</h3>
+      <p>Write the hierarchy into the name — "Downtown LA (district)" / "Downtown (neighborhood)" — or disambiguate with <code>aria-label</code>. Copy-level fix, cheapest kind there is.</p>
+    </div>
+    <figure>
+      <img src="S4-booking.png" alt="OpenTable Bestia page — breadcrumb with two identical Downtown links, plus inline booking widget">
+      <figcaption class="zh">取证截图：面包屑的两个 "Downtown" 链接 + inline 预订组件</figcaption>
+      <figcaption class="en">Evidence: the breadcrumb's twin "Downtown" links + the inline booking widget</figcaption>
+    </figure>
+  </section>
+
+  <section class="card">
+    <h2><span class="zh">附：这次还发现了（未进前三）</span><span class="en">Also found (honorable mentions)</span></h2>
+    <div class="zh">
+      <ul>
+        <li>"Featured in" 是 h2，下面文章标题直接跳到 h4，中间没有 h3（1.3.1）。</li>
+        <li>"FAQs" 用 h3，但同级区块全是 h2，它没有父级 h2（1.3.1）。</li>
+        <li>tablist 里每个 <code>role="tab"</code> 的 label 还嵌了原生 radio input，读屏可能报"tab + radio checked"双重角色（4.1.2）。</li>
+        <li>"Loved For" 区标题读作 "Loved For What are OpenTable Diners Choice lists" —— 徽章文案和链接文案粘连（2.4.6）。</li>
+        <li>疑似低对比度灰字（未实测）："Booked 103 times today"、"Dined 2 days ago"、"AI-generated from verified diner reviews"（1.4.3 候选）。</li>
+      </ul>
+    </div>
+    <div class="en">
+      <ul>
+        <li>"Featured in" is an h2, but article titles beneath jump straight to h4 with no h3 (1.3.1).</li>
+        <li>"FAQs" is an h3 while sibling sections are all h2s — it has no parent h2 (1.3.1).</li>
+        <li>Each <code>role="tab"</code> label in the tablist nests a native radio input, so screen readers may announce a doubled "tab + radio checked" role (4.1.2).</li>
+        <li>A heading in "Loved For" announces as "Loved For What are OpenTable Diners Choice lists" — badge copy and link copy glued together (2.4.6).</li>
+        <li>Suspected low-contrast gray text (unmeasured): "Booked 103 times today", "Dined 2 days ago", "AI-generated from verified diner reviews" (1.4.3 candidate).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="zh">附：验证通过的</span><span class="en">Verified passing</span></h2>
+    <div class="zh">
+      <ul>
+        <li>Skip link "Skip to main content" 是 Tab 顺序第一位，聚焦时可见（2.4.1）；全程焦点环可见、Tab 顺序合理、无 keyboard trap（2.4.7 / 2.1.2）。</li>
+        <li>全页唯一 h1。收藏/照片/地图按钮名字清楚（4.1.2）。照片画廊弹窗 Enter 开 / Esc 关。</li>
+        <li>时间段按钮名字信息丰富："Reserve table at Bestia at 9:15 PM on October 11, for a party of 2"。</li>
+        <li>搜索框有 label、评分条具名、星星图 alt "4.7 stars"、评论者头像具名。地图是链接图片，无嵌入式交互地图控件要审。</li>
+      </ul>
+    </div>
+    <div class="en">
+      <ul>
+        <li>Skip link "Skip to main content" is first in tab order and visible on focus (2.4.1); focus ring visible throughout, logical tab order, no keyboard traps (2.4.7 / 2.1.2).</li>
+        <li>Exactly one h1. Save/photos/map buttons all well-named (4.1.2). Photo gallery dialog opens with Enter, closes with Escape.</li>
+        <li>Time-slot buttons are richly named: "Reserve table at Bestia at 9:15 PM on October 11, for a party of 2".</li>
+        <li>Search box labeled, rating meters named, star images alt "4.7 stars", reviewer avatars named. The map is a linked image — no embedded interactive map controls to audit.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="interview">
+    <p class="zh"><strong>🎙️ 面试怎么讲：</strong>"审过一次 OpenTable 餐厅页，最有意思的发现不在犄角旮旯，在全页最重要的吸顶预订组件上：人数和时间的两个选择器只有图标没有文字标签，读屏名字叫'Party size selector'，但用户能看见的是'2 people' —— 语音控制用户说'点 2 people'根本点不中。修法是把可见文字写进名字，顺带给图标配上文字标签。"</p>
+    <p class="en"><strong>🎙️ How to say it in an interview:</strong> "I once audited an OpenTable restaurant page, and the most interesting find wasn't in a corner — it was in the page's most important widget, the sticky booking bar. The party-size and time selectors are icons only, no text labels; the screen-reader name is 'Party size selector' while the user sees '2 people' — a voice-control user saying 'click 2 people' can't land it. The fix writes the visible text into the name, and gives the icons text labels along the way."</p>
+  </div>
+
+  <footer>
+    <span class="muted">A11y Roasts · 每天一期</span>
+    <a href="../../index.html"><span class="zh">← 全部找茬</span><span class="en">← All roasts</span></a>
+  </footer>
+</div>
+<script>
+function setLang(l){ document.body.dataset.lang = l;
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
+  document.documentElement.lang = l==='zh' ? 'zh-CN' : 'en'; }
+</script>
+</body>
+</html>

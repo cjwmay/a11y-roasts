@@ -1,0 +1,1 @@
+{"description":"One real product a11y roast a day — 3 issues + fixes, evidence-backed. 中英双语。","devDependencies":{"servor":"^4.0.2"},"name":"a11y-roasts","private":true,"scripts":{"dev":"servor --reload"},"version":"1.0.0"}
